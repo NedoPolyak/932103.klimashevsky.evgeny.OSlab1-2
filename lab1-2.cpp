@@ -12,11 +12,11 @@ volatile int events[EVENTSNUM] = { 0 };
 
 void* producerThread(void* arg) {
     for (int i = 0; i < EVENTSNUM; ++i) {
-        sleep(1);
         pthread_mutex_lock(&mutex);
         events[i] = 1;
         printf("Event %d Produced.\n", i + 1);
         pthread_cond_signal(&cond_consumer);
+        pthread_cond_wait(&cond_producer, &mutex);
         pthread_mutex_unlock(&mutex);
     }
     return nullptr;
